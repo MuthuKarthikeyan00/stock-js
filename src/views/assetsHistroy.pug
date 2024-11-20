@@ -1,0 +1,63 @@
+extends layouts/main.pug
+
+block content
+    ul.nav.nav-tabs(role="tablist")
+        li.nav-item
+            a.nav-link.active(aria-current="page", href="#add", data-bs-toggle="tab") Add
+
+    .tab-content.p-4
+        .tab-pane.fade.show.active#add(role="tabpanel")
+            form.row.g-3.needs-validation(action="/assetsHistroy" method="post" enctype="multipart/form-data" novalidate)
+                .col-md-6
+                    input#assetStatusId.form-control(type="number", name="assetStatusId",hidden=true, value=4, required)
+                    label(for="assetId").form-label Asset
+                    select#assetId.form-select(name="assetId", required)
+                        option(value=0, selected) Choose one...
+                        each asset in assets
+                            option(value=asset.value) #{asset.label}
+                    .invalid-feedback Please select a valid asset.                       
+                .row#assetsHistroyContainer    
+                    table#assetsHistroy.table.table-striped.table-bordered
+                        thead
+                            tr
+                                th S/no
+                                th Asset
+                                th employee
+                                th Status
+                                th Transaction
+                                th Date
+                                th Amount
+                        tbody    
+                        tfoot
+                            tr
+                                th(colspan="6" style="text-align:right") Total
+                                th#total-amount
+                        tfoot
+
+
+    script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js")
+    script(src='/datatable.js')
+    script.
+        $('#assetsHistroyContainer').hide();
+
+        $('#assetId').on('change', function() {
+            var selectedOption = parseInt($(this).find('option:selected').val(), 10);
+             if ($.fn.dataTable.isDataTable('#assetsHistroy')) {
+                    $('#assetsHistroy').DataTable().clear().destroy();
+                    }
+            if(selectedOption > 0){
+
+                initializeDataTable('#assetsHistroy', '/getAssetsHistory', [
+                    { data: 'assetId' },
+                    { data: 'employeeId' },
+                    { data: 'assetStatusId' },
+                    { data: 'assetTransactionTypeId' },
+                    { data: 'createdAt' },
+                    { data: 'amount' },
+
+                ],{assetId : selectedOption,footerVisble:true});
+            }
+            $('#assetsHistroyContainer').show();
+        });
+

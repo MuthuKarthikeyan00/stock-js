@@ -1,0 +1,57 @@
+extends layouts/main.pug
+
+block content
+    if data && data.id > 0 
+        ul.nav.nav-tabs(role="tablist")
+            li.nav-item
+                a.nav-link.active(aria-current="page", href="#edit", data-bs-toggle="tab") EDIT
+        .tab-content.p-4
+            .tab-pane.fade.show.active#edit(role="tabpanel")
+                form.row.g-3.needs-validation(action=`/assetTransactionType/${data.id}` method="post" enctype="multipart/form-data" novalidate)
+                    .col-md-6
+                        label(for="name").form-label First name
+                        input#firstName.form-control(type="text", name="name", value=data.name, required)
+                        .valid-feedback Looks good!
+                    .col-12
+                        button.btn.btn-primary(type="submit") Submit form
+    else 
+        ul.nav.nav-tabs(role="tablist")
+            li.nav-item
+                a.nav-link.active(aria-current="page", href="#view", data-bs-toggle="tab") View
+            li.nav-item
+                a.nav-link(href="#add", data-bs-toggle="tab") Add
+        .tab-content.p-4
+            .tab-pane.fade.show.active#view(role="tabpanel")
+                table#assetTransactionType.table.table-striped.table-bordered
+                    thead
+                        tr
+                            th S/no
+                            th Name
+                            th Action
+                    tbody
+
+            .tab-pane.fade#add(role="tabpanel")
+                form.row.g-3.needs-validation(action="/assetTransactionType" method="post" enctype="multipart/form-data" novalidate)
+                    .col-md-6
+                        label(for="name").form-label First name
+                        input#firstName.form-control(type="text", name="name", value="", required)
+                        .valid-feedback Looks good!
+                    .col-12
+                        button.btn.btn-primary(type="submit") Submit form
+
+        script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+        script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js")
+        script(src='/datatable.js')
+        script.
+            initializeDataTable('#assetTransactionType', '/getAssetTransactionType', [
+                { data: 'name' },
+                {
+                    data: 'id', 
+                    render: function(data, type, row) {
+                        return `
+                            <a href="http://localhost:7100/assetTransactionType/${data}" class="btn btn-primary edit-btn" data-id="${data}">Edit</a>
+                            <a href="http://localhost:7100/assetTransactionTypeDelete/${data}" class="btn btn-danger delete-btn" data-id="${data}">Delete</a>
+                        `;
+                    }
+                }
+            ]);

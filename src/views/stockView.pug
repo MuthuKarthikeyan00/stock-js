@@ -1,0 +1,88 @@
+extends layouts/main.pug
+
+block content
+    ul.nav.nav-tabs(role="tablist")
+        li.nav-item
+            a.nav-link.active(aria-current="page", href="#add", data-bs-toggle="tab") Add
+
+    .tab-content.p-4
+        .tab-pane.fade.show.active#add(role="tabpanel")
+            form.row.g-3.needs-validation(action="/stockView" method="post" enctype="multipart/form-data" novalidate)
+                .col-md-3
+                    label(for="assetId").form-label Asset
+                    select#assetId.form-select.searchFileds(name="assetId")
+                        option(value=0, selected) Choose one...
+                        each asset in assets
+                            option(value=asset.value) #{asset.label}                  
+                .col-md-3
+                    label(for="assetStatusId").form-label asset Status
+                    select#assetStatusId.form-select.searchFileds(name="assetStatusId", )
+                        option(value=0, selected) Choose one...
+                        each assetsStatus in assetStatuses
+                            option(value=assetsStatus.value) #{assetsStatus.label}
+                .col-md-3
+                    label(for="assetcategoryId").form-label Category
+                    select#assetcategoryId.form-select.searchFileds(name="assetcategoryId", )
+                        option(value=0, selected) Choose one...
+                        each assetCategory in assetCategories
+                            option(value=assetCategory.value) #{assetCategory.label}
+                .col-md-3
+                    label(for="employeeId").form-label employee
+                    select#employeeId.form-select.searchFileds(name="employeeId", )
+                        option(value=0, selected) Choose one...
+                        each employee in employees
+                            option(value=employee.value) #{employee.label}
+                .col-md-3
+                    label(for="branchId").form-label Branch
+                    select#branchId.form-select.searchFileds(name="branchId", )
+                        option(value=0, selected) Choose one...
+                        each branch in branches
+                            option(value=branch.value) #{branch.label}                                                               
+                .row#stockViewContainer    
+                    table#stockView.table.table-striped.table-bordered
+                        thead
+                            tr
+                                th S/no
+                                th Asset
+                                th Status
+                                th Category 
+                                th Employee
+                                th Branch
+                                th Model
+                        tbody    
+                        tfoot
+                            tr
+                                th(colspan="6" style="text-align:right") Total
+                                th#total-amount
+                        tfoot
+
+
+    script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+    script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js")
+    script(src='/datatable.js')
+    script.
+        $('#stockViewContainer').hide();
+        $('.searchFileds').on('change', function() {
+            var selectedOption = parseInt($(this).find('option:selected').val(), 10);
+                if ($.fn.dataTable.isDataTable('#stockView')) {
+                    $('#stockView').DataTable().clear().destroy();
+                    }
+                initializeDataTable('#stockView', '/getStockView', [
+                    { data: 'assetName' },
+                    { data: 'statusName' },
+                    { data: 'categoryName' },
+                    { data: 'employeeName' },
+                    { data: 'branchName' },
+                    { data: 'assetModel' },
+                                       
+                ],{
+                    footerVisble:true,
+                    assetId : parseInt($('#assetId').find('option:selected').val(), 10),
+                    assetStatusId :  parseInt($('#assetStatusId').find('option:selected').val(), 10),
+                    assetcategoryId :  parseInt($('#assetcategoryId').find('option:selected').val(), 10),
+                    employeeId :  parseInt($('#employeeId').find('option:selected').val(), 10),
+                    branchId :  parseInt($('#branchId').find('option:selected').val(), 10),                   
+                  });
+            $('#stockViewContainer').show();
+        });
+

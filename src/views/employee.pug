@@ -1,0 +1,110 @@
+extends layouts/main.pug
+
+
+block content
+    if data && data.id > 0 
+        ul.nav.nav-tabs(role="tablist")
+            li.nav-item
+                a.nav-link.active(aria-current="page", href="#edit", data-bs-toggle="tab") EDIT
+        .tab-content.p-4
+            .tab-pane.fade.show.active#edit(role="tabpanel")
+                form.row.g-3.needs-validation(action=`/employee/${data.id}` method="post" enctype="multipart/form-data" novalidate)
+                    .col-md-6
+                        label(for="name").form-label  name
+                        input#name.form-control(type="text", name="name", value=data.name, required)
+                        .valid-feedback Looks good!
+                    .col-md-6
+                        label(for="email").form-label Email
+                        input#email.form-control(type="email", name="email", value=data.email, required)
+                        .valid-feedback Looks good!
+                    .col-md-6
+                        label(for="phone").form-label Phone
+                        input#phone.form-control(type="text", name="phone", value=data.phone, required)
+                        .invalid-feedback Please provide a valid phone.
+                    .col-md-6
+                        label(for="role").form-label Role
+                        select#roleId.form-select(name="roleId", required)
+                            each role in roles
+                                if role.id == data.roleId  
+                                   option(value=role.value) #{role.label}
+                                else  
+                                   option(value=role.value) #{role.label}                                   
+                        .invalid-feedback Please select a valid role.
+                    .col-md-6
+                        label(for="branchId").form-label Role
+                        select#branchId.form-select(name="branchId", required)
+                            each branch in branches
+                                if branch.id == data.branchId  
+                                   option(value=branch.value) #{branch.label}
+                                else  
+                                   option(value=branch.value) #{branch.label}                                   
+                        .invalid-feedback Please select a valid Branch.                      
+                    .col-12
+                        button.btn.btn-primary(type="submit") Submit form
+    else 
+        ul.nav.nav-tabs(role="tablist")
+            li.nav-item
+                a.nav-link.active(aria-current="page", href="#view", data-bs-toggle="tab") View
+            li.nav-item
+                a.nav-link(href="#add", data-bs-toggle="tab") Add
+        .tab-content.p-4
+            .tab-pane.fade.show.active#view(role="tabpanel")
+                table#employee.table.table-striped.table-bordered
+                    thead
+                        tr
+                            th S/no
+                            th Name
+                            th Email
+                            th Phone
+                            th Role 
+                            th Branch
+                    tbody
+            .tab-pane.fade#add(role="tabpanel")
+                form.row.g-3.needs-validation(action="/employee" method="post" enctype="multipart/form-data" novalidate)
+                    .col-md-6
+                        label(for="name").form-label  name
+                        input#name.form-control(type="text", name="name", value="", required)
+                        .valid-feedback Looks good!
+                    .col-md-6
+                        label(for="email").form-label Email
+                        input#email.form-control(type="email", name="email", value="", required)
+                        .valid-feedback Looks good!
+                    .col-md-6
+                        label(for="phone").form-label Phone
+                        input#phone.form-control(type="text", name="phone", required)
+                        .invalid-feedback Please provide a valid phone.
+                    .col-md-6
+                        label(for="role").form-label Role
+                        select#roleId.form-select(name="roleId", required)
+                           each role in roles
+                                option(value=role.value) #{role.label}
+                        .invalid-feedback Please select a valid role.
+                    .col-md-6
+                        label(for="branchId").form-label Role
+                        select#branchId.form-select(name="branchId", required)
+                            each branch in branches
+                                option(value=branch.value) #{branch.label}
+                        .invalid-feedback Please select a valid role.                      
+                    .col-12
+                        button.btn.btn-primary(type="submit") Submit form
+
+        script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+        script(src="https://cdn.datatables.net/2.1.8/js/dataTables.js")
+        script(src='/datatable.js')
+        script.
+            initializeDataTable('#employee', '/getEmployee', [
+                { data: 'name' },
+                { data: 'email' },
+                { data: 'phone' },
+                { data: 'roleId' },
+                { data: 'branchId' },
+                {
+                    data: 'id', 
+                    render: function(data, type, row) {
+                        return `
+                            <a href="http://localhost:7100/employee/${data}" class="btn btn-primary edit-btn" data-id="${data}">Edit</a>
+                            <a href="http://localhost:7100/employeeDelete/${data}" class="btn btn-danger delete-btn" data-id="${data}">Delete</a>
+                        `;
+                    }
+                }
+            ]);

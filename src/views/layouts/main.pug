@@ -1,0 +1,52 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title Bootstrap demo
+        link(href="/bootstrap/css/bootstrap.min.css", rel="stylesheet")
+        link(href="/style.css", rel="stylesheet")
+        link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css")
+        script(src="/bootstrap/js/bootstrap.bundle.min.js")
+    body
+        header(class='header_conatiner border') 
+            section(class='header_left d-flex justify-content-center align-items-center border')  
+                h3 stocks
+            section(class='header_right border')  
+                h1 
+        section(class='main_conatiner border') 
+            aside(class='main_left border')  
+                nav.flex-column.nav
+                    a.nav-link(href="employee") Employee Master
+                    a.nav-link(href="employeeRole") Employee Role
+                    a.nav-link(href="employeeBranch") Employee Branch
+                    a.nav-link(href="asset") Asset Master
+                    a.nav-link(href="assetCategory") Asset Category 
+                    a.nav-link(href="assetType") Asset Type 
+                    a.nav-link(href="assetTransactionType") Asset Transaction Type
+                    a.nav-link(href="assetStatus") Asset Status
+                    a.nav-link(href="assetIssue") Asset Issue
+                    a.nav-link(href="assetReturn") Asset Return
+                    a.nav-link(href="assetScrap") Asset Scrap
+                    a.nav-link(href="assetsHistroy") Assets Histroy
+                    a.nav-link(href="stockView") Stock View
+
+            main(class='main_right border')  
+                block content
+        script.
+            $(document).ready(function() {
+                const currentPath = window.location.pathname.substring(1); // Remove leading '/'
+                $('a.nav-link[href="' + currentPath + '"]').addClass('active');
+            });
+            (() => {
+                const forms = document.querySelectorAll('.needs-validation')
+                Array.prototype.slice.call(forms).forEach(form => {
+                    form.addEventListener('submit', event => {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+            })()

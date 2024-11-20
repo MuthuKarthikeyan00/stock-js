@@ -1,0 +1,56 @@
+extends layouts/main.pug
+
+block content
+    ul.nav.nav-tabs(role="tablist")
+        li.nav-item
+            a.nav-link.active(aria-current="page", href="#add", data-bs-toggle="tab") Add
+
+    .tab-content.p-4
+        .tab-pane.fade.show.active#add(role="tabpanel")
+            form.row.g-3.needs-validation(action="/assetTransaction" method="post" enctype="multipart/form-data" novalidate)
+                .col-md-6
+                    input#transactionType.form-control(type="number", name="assetStatusId", hidden=true, value=3, required)
+                    label(for="assetId").form-label Asset
+                    select#assetId.form-select(name="assetId", required)
+                        option(value=0, selected) Choose one...
+                        each asset in assets
+                            option(value=asset.value, data-employee-id=asset.employeeId ,data-employee-name=asset.employeeName)  #{asset.label}
+                    .invalid-feedback Please select a valid asset.
+                .col-md-6
+                    label(for="employeeName").form-label Employee
+                    input#employeeName.form-control(type="text",readonly, name="employeeName", value="", required)
+                    input#employeeId.form-control(type="number", hidden,readonly ,name="employeeId", value="", required)
+                    .invalid-feedback Please select a valid employee.
+                .col-md-6
+                    label(for="assetTransactionTypeId").form-label Reason
+                    select#assetTransactionTypeId.form-select(name="assetTransactionTypeId", required)
+                        option(value=0, selected) Choose one...
+                        each assetTransactionId in assetTransactionIds
+                            option(value=assetTransactionId.value)  #{assetTransactionId.label}
+                    .invalid-feedback Please select a valid asset.
+                .col-md-6#amountContainer
+                    label(for="amount").form-label Amount
+                    input#amount.form-control(type="number", name="amount", value="", required)
+                    .valid-feedback Looks good!                        
+                    .col-md-6
+                .col-12
+                    button.btn.btn-primary(type="submit") Submit form
+
+        script(src='https://code.jquery.com/jquery-3.6.0.min.js')
+        script.
+            $(document).ready(function() {
+                $('#amountContainer').hide();
+                $('#assetId').on('change', function() {
+                    var selectedOption = $(this).find('option:selected');
+                    $('#employeeId').val(selectedOption.data('employee-id'));
+                    $('#employeeName').val(selectedOption.data('employee-name'));
+                });
+                $('#assetTransactionTypeId').on('change', function() {
+                    var selectedOption = parseInt($(this).find('option:selected').val(), 10);
+                    if([2,3].includes(selectedOption)){
+                        $('#amountContainer').show();
+                    }else{
+                        $('#amountContainer').hide();
+                    }
+                });
+            });
