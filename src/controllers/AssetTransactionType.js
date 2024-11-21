@@ -1,17 +1,17 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { AssetTransactionType: AssetTransactionTypeModel } = require("../models/AssetTransactionType");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeRoleValidationSchema } = require("../validator/schema");
 const { Op } = require("sequelize");
+const db = require("../models");
 
 class AssetTransactionType {
   static async render(req, res) {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await AssetTransactionTypeModel.findOne({
+      data = await db.AssetTransactionType.findOne({
         where: {
           id
         },
@@ -37,7 +37,7 @@ class AssetTransactionType {
       const body = req.body;
       const args = await AssetTransactionType.handleData(body);
 
-      const data = await AssetTransactionTypeModel.create({
+      const data = await db.AssetTransactionType.create({
         name: args.name,
         createdAt: new Date().toISOString(),
       });
@@ -69,7 +69,7 @@ class AssetTransactionType {
       const args = await AssetTransactionType.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await AssetTransactionTypeModel.findOne({
+      const isValid = await db.AssetTransactionType.findOne({
         where: {
           id,
         },
@@ -82,7 +82,7 @@ class AssetTransactionType {
         );
       }
 
-      const updated_id = await AssetTransactionTypeModel.update(args, {
+      const updated_id = await db.AssetTransactionType.update(args, {
         where: {
           id,
         }
@@ -108,7 +108,7 @@ class AssetTransactionType {
         );
       }
 
-      const isValid = await AssetTransactionTypeModel.findOne({
+      const isValid = await db.AssetTransactionType.findOne({
         where: {
           id,
         },
@@ -121,7 +121,7 @@ class AssetTransactionType {
         );
       }
 
-      const updated_id = await AssetTransactionTypeModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.AssetTransactionType.update({ isDeleted: 1 }, {
         where: {
           id,
         }
@@ -152,7 +152,7 @@ class AssetTransactionType {
         }),
       };
 
-      const data = await AssetTransactionTypeModel.findAndCountAll({
+      const data = await db.AssetTransactionType.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -175,7 +175,7 @@ class AssetTransactionType {
     const search = args?.search || '';
     const assetTransactionIds = args?.assetTransactionIds || [1, 2, 3, 4];
 
-    const assetCategories = await AssetTransactionTypeModel.findAll({
+    const assetCategories = await db.AssetTransactionType.findAll({
       attributes: [
         ['id', 'value'],
         ['name', 'label']

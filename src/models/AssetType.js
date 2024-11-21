@@ -1,6 +1,5 @@
-const { Model, DataTypes } = require('sequelize');
-const { Asset } = require('./Asset');
 
+const { Model, DataTypes } = require('sequelize');
 class AssetType extends Model {
   static associate(models) {
     // Define associations here
@@ -18,6 +17,7 @@ module.exports = (sequelize) => {
       },
       name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       isDeleted: {

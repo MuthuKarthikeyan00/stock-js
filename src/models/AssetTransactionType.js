@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require('sequelize');
 
+const { Model, DataTypes } = require('sequelize');
 
 class AssetTransactionType extends Model {
   static associate(models) {
@@ -18,6 +18,7 @@ module.exports = (sequelize) => {
       },
       name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       isDeleted: {

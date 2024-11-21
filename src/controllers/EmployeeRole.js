@@ -1,17 +1,17 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { EmployeeRole: EmployeeRoleModel } = require("../models/EmployeeRole");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeRoleValidationSchema } = require("../validator/schema");
 const { Op } = require("sequelize");
+const db = require("../models");
 
 class EmployeeRole {
   static async render(req, res) {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await EmployeeRoleModel.findOne({
+      data = await db.EmployeeRole.findOne({
         where: {
           id
         },
@@ -37,7 +37,7 @@ class EmployeeRole {
       const body = req.body;
       const args = await EmployeeRole.handleData(body);
 
-      const data = await EmployeeRoleModel.create({
+      const data = await db.EmployeeRole.create({
         name: args.name,
         createdAt: new Date().toISOString(),
       });
@@ -69,7 +69,7 @@ class EmployeeRole {
       const args = await EmployeeRole.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await EmployeeRoleModel.findOne({
+      const isValid = await db.EmployeeRole.findOne({
         where: {
           id,
         },
@@ -82,7 +82,7 @@ class EmployeeRole {
         );
       }
 
-      const updated_id = await EmployeeRoleModel.update(args, {
+      const updated_id = await db.EmployeeRole.update(args, {
         where: {
           id,
         }
@@ -108,7 +108,7 @@ class EmployeeRole {
         );
       }
 
-      const isValid = await EmployeeRoleModel.findOne({
+      const isValid = await db.EmployeeRole.findOne({
         where: {
           id,
         },
@@ -121,7 +121,7 @@ class EmployeeRole {
         );
       }
 
-      const updated_id = await EmployeeRoleModel.update({isDeleted: 1}, {
+      const updated_id = await db.EmployeeRole.update({isDeleted: 1}, {
         where: {
           id,
         }
@@ -152,7 +152,7 @@ class EmployeeRole {
         }),
       };
 
-      const data = await EmployeeRoleModel.findAndCountAll({
+      const data = await db.EmployeeRole.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -173,7 +173,7 @@ class EmployeeRole {
   static async fetch(args = {}) {
     const search = args?.search || '';
 
-    const assetCategories = await EmployeeRoleModel.findAll({
+    const assetCategories = await db.EmployeeRole.findAll({
       attributes: [
         ['id', 'value'],
         ['name', 'label']

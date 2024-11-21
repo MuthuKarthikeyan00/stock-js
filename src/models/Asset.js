@@ -1,17 +1,17 @@
 const { Model, DataTypes } = require('sequelize');
 
-class Asset extends Model {
-  static associate(models) {
-    Asset.belongsTo(models.AssetStatus, { foreignKey: 'assetStatusId', as: 'assetStatus' });
-    Asset.belongsTo(models.AssetType, { foreignKey: 'typeId', as: 'assetType' });
-    Asset.belongsTo(models.AssetCategory, { foreignKey: 'categoryId', as: 'assetCategory' });
-    Asset.belongsTo(models.AssetTransactionType, { foreignKey: 'assetTransactionTypeId', as: 'assetTransactionType' });
-    Asset.belongsTo(models.Employee, { foreignKey: 'employeeId', as: 'employee' });
-    Asset.hasMany(models.AssetTransaction, { foreignKey: 'assetId', as: 'assetTransactions' });
-  }
-}
-
 module.exports = (sequelize) => {
+  class Asset extends Model {
+    static associate(models) {
+      Asset.belongsTo(models.AssetStatus, { foreignKey: 'assetStatusId', as: 'assetStatus' });
+      Asset.belongsTo(models.AssetType, { foreignKey: 'typeId', as: 'assetType' });
+      Asset.belongsTo(models.AssetCategory, { foreignKey: 'categoryId', as: 'assetCategory' });
+      Asset.belongsTo(models.AssetTransactionType, { foreignKey: 'assetTransactionTypeId', as: 'assetTransactionType' });
+      Asset.belongsTo(models.Employee, { foreignKey: 'employeeId', as: 'employee' });
+      Asset.hasMany(models.AssetTransaction, { foreignKey: 'assetId', as: 'assetTransactions' });
+    }
+  }
+
   Asset.init(
     {
       name: {

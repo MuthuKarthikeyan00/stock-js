@@ -1,9 +1,8 @@
 const { Model, DataTypes } = require('sequelize');
-const { Employee } = require('./Employee');
 
 class EmployeeBranch extends Model {
   static associate(models) {
-    // Define the association between EmployeeBranch and Employee
+    // Define associations
     EmployeeBranch.hasMany(models.Employee, { foreignKey: 'branchId', as: 'employees' });
   }
 }
@@ -18,17 +17,18 @@ module.exports = (sequelize) => {
       },
       name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       isDeleted: {
         type: DataTypes.SMALLINT,
         allowNull: true,
-      }
+      },
     },
     {
-      sequelize,
-      tableName: 'employee_branches', 
-      timestamps: true, 
+      sequelize, // Passing sequelize instance here
+      tableName: 'employee_branches',
+      timestamps: true,
     }
   );
 

@@ -1,6 +1,5 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { Asset: AssetModel } = require("../models/Asset");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { assetValidationSchema } = require("../validator/schema");
@@ -14,6 +13,7 @@ const { AssetStatus: AssetStatusModel } = require("../models/AssetStatus");
 const { AssetCategory: AssetCategoryModel } = require("../models/AssetCategory");
 const { AssetType: AssetTypeModel } = require("../models/AssetType");
 const { Employee: EmployeeModel } = require("../models/Employee");
+const db = require("../models");
 
 class Asset {
   static async render(req, res) {
@@ -24,7 +24,7 @@ class Asset {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await AssetModel.findOne({
+      data = await db.Asset.findOne({
         where: {
           id,
         },
@@ -61,7 +61,7 @@ class Asset {
       args.createdAt = new Date().toISOString();
       args.assetStatusId = 1;
       args.assetTransactionTypeId = 1;
-      const data = await AssetModel.create(args);
+      const data = await db.Asset.create(args);
 
       if (Utils.isGraterthenZero(data.id)) {
         const result = await AssetTransaction.create({
@@ -99,7 +99,7 @@ class Asset {
       args.updatedAt = new Date().toISOString();
       args.statusId = 1;
 
-      const isValid = await AssetModel.findOne({
+      const isValid = await db.Asset.findOne({
         where: {
           id,
         },
@@ -108,7 +108,7 @@ class Asset {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const updated_id = await AssetModel.update(args, {
+      const updated_id = await db.Asset.update(args, {
         where: {
           id,
         },
@@ -131,7 +131,7 @@ class Asset {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const isValid = await AssetModel.findOne({
+      const isValid = await db.Asset.findOne({
         where: {
           id,
         },
@@ -140,7 +140,7 @@ class Asset {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const updated_id = await AssetModel.update(
+      const updated_id = await db.Asset.update(
         { isDeleted: 1 },
         {
           where: {
@@ -173,7 +173,7 @@ class Asset {
         }),
       };
 
-      const { count, rows } = await AssetModel.findAndCountAll({
+      const { count, rows } = await db.Asset.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -233,7 +233,7 @@ class Asset {
     const search = args?.search || "";
     const assetStatusIds = args?.assetStatusIds || [1, 2, 3, 4];
 
-    const assets = await AssetModel.findAll({
+    const assets = await db.Asset.findAll({
       attributes: [
         [
           literal(

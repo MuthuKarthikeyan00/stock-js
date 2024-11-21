@@ -1,17 +1,17 @@
 const Sanitizer = require('../helpers/Sanitizer');
 const Utils = require('../helpers/Utils');
-const { AssetType: AssetTypeModel } = require('../models/AssetType');
 const ResponseHandler = require('../helpers/ResponseHandler');
 const Validator = require('../validator/Validator');
 const { employeeRoleValidationSchema } = require('../validator/schema');
 const { Op } = require('sequelize');
+const db = require("../models");
 
 class AssetType {
   static async render(req, res) {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await AssetTypeModel.findOne({
+      data = await db.AssetType.findOne({
         where: {
           id
         },
@@ -37,7 +37,7 @@ class AssetType {
       const body = req.body;
       const args = await AssetType.handleData(body);
 
-      const data = await AssetTypeModel.create({
+      const data = await db.AssetType.create({
         name: args.name,
         createdAt: new Date().toISOString(),
       });
@@ -69,7 +69,7 @@ class AssetType {
       const args = await AssetType.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await AssetTypeModel.findOne({
+      const isValid = await db.AssetType.findOne({
         where: {
           id,
         },
@@ -82,7 +82,7 @@ class AssetType {
         );
       }
 
-      const updated_id = await AssetTypeModel.update(args, {
+      const updated_id = await db.AssetType.update(args, {
         where: {
           id,
         }
@@ -108,7 +108,7 @@ class AssetType {
         );
       }
 
-      const isValid = await AssetTypeModel.findOne({
+      const isValid = await db.AssetType.findOne({
         where: {
           id,
         },
@@ -121,7 +121,7 @@ class AssetType {
         );
       }
 
-      const updated_id = await AssetTypeModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.AssetType.update({ isDeleted: 1 }, {
         where: {
           id,
         }
@@ -152,7 +152,7 @@ class AssetType {
         }),
       };
 
-      const data = await AssetTypeModel.findAndCountAll({
+      const data = await db.AssetType.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -174,7 +174,7 @@ class AssetType {
   static async fetch(args = {}) {
     const search = args?.search || '';
 
-    const assetCategories = await AssetTypeModel.findAll({
+    const assetCategories = await db.AssetType.findAll({
       attributes: [
         ['id', 'value'],
         ['name', 'label']

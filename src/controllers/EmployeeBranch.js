@@ -1,22 +1,27 @@
 const Sanitizer = require('../helpers/Sanitizer');
 const Utils = require('../helpers/Utils');
-const { EmployeeBranch: EmployeeBranchModel } = require('../models/EmployeeBranch');
+
 const ResponseHandler = require('../helpers/ResponseHandler');
 const Validator = require('../validator/Validator');
 const { employeeRoleValidationSchema } = require('../validator/schema');
 const { literal, Op } = require('sequelize');
 
+const db = require("../models");
+
 class EmployeeBranch {
   static async render(req, res) {
-    let data;
-    let id = Utils.convertTONumber(req.params.id);
-    if (Utils.isGraterthenZero(id)) {
-      data = await EmployeeBranchModel.findOne({
-        where: {
-          id,
-        },
-      });
-    }
+    // let data;
+    // let id = Utils.convertTONumber(req.params.id);
+    // if (Utils.isGraterthenZero(id)) {
+    //   data = await db.EmployeeBranch.findOne({
+    //     where: {
+    //       id,
+    //     },
+    //   });
+    // }
+
+    let data = []
+
     return res.status(200).render('employeeBranch', {
       data,
     });
@@ -36,10 +41,10 @@ class EmployeeBranch {
       }
       const body = req.body;
       const args = await EmployeeBranch.handleData(body);
+      
 
-      const data = await EmployeeBranchModel.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+      const data = await db.EmployeeBranch.create({
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/employeeBranch');
@@ -64,7 +69,7 @@ class EmployeeBranch {
       const args = await EmployeeBranch.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await EmployeeBranchModel.findOne({
+      const isValid = await db.EmployeeBranch.findOne({
         where: {
           id,
         },
@@ -73,7 +78,7 @@ class EmployeeBranch {
         return ResponseHandler.error(res, {}, 400, 'invalid id');
       }
 
-      const updated_id = await EmployeeBranchModel.update(args, {
+      const updated_id = await db.EmployeeBranch.update(args, {
         where: {
           id,
         },
@@ -95,7 +100,7 @@ class EmployeeBranch {
         return ResponseHandler.error(res, {}, 400, 'invalid id');
       }
 
-      const isValid = await EmployeeBranchModel.findOne({
+      const isValid = await db.EmployeeBranch.findOne({
         where: {
           id,
         },
@@ -104,7 +109,7 @@ class EmployeeBranch {
         return ResponseHandler.error(res, {}, 400, 'invalid id');
       }
 
-      const updated_id = await EmployeeBranchModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.EmployeeBranch.update({ isDeleted: 1 }, {
         where: {
           id,
         },
@@ -133,7 +138,7 @@ class EmployeeBranch {
         }),
       };
 
-      const data = await EmployeeBranchModel.findAndCountAll({
+      const data = await db.EmployeeBranch.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -152,7 +157,7 @@ class EmployeeBranch {
   static async fetch(args = {}) {
     const search = args?.search || '';
 
-    const assetCategories = await EmployeeBranchModel.findAll({
+    const assetCategories = await db.EmployeeBranch.findAll({
       attributes: [['id', 'value'], ['name', 'label']],
       where: {
         isDeleted: {

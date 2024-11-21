@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require('sequelize');
 
+const { Model, DataTypes } = require('sequelize');
 
 class AssetTransaction extends Model {
   static associate(models) {

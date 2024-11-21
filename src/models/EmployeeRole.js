@@ -1,5 +1,4 @@
 const { Model, DataTypes } = require('sequelize');
-const { Employee } = require('./Employee');
 
 class EmployeeRole extends Model {
   static associate(models) {
@@ -18,6 +17,7 @@ module.exports = (sequelize) => {
       },
       name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
       },
       isDeleted: {

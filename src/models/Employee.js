@@ -1,7 +1,4 @@
 const { Model, DataTypes } = require('sequelize');
-const { EmployeeRole } = require('./EmployeeRole');
-const { EmployeeBranch } = require('./EmployeeBranch');
-const { AssetTransaction } = require('./AssetTransaction');
 
 class Employee extends Model {
   static associate(models) {

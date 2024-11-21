@@ -1,17 +1,17 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { AssetCategory: AssetCategoryModel } = require("../models/AssetCategory");
 const { Op } = require("sequelize");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeRoleValidationSchema } = require("../validator/schema");
+const db = require("../models");
 
 class AssetCategory {
   static async render(req, res) {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await AssetCategoryModel.findOne({
+      data = await db.AssetCategory.findOne({
         where: {
           id,
         },
@@ -37,7 +37,7 @@ class AssetCategory {
       const body = req.body;
       const args = await AssetCategory.handleData(body);
 
-      const data = await AssetCategoryModel.create({
+      const data = await db.AssetCategory.create({
         name: args.name,
         createdAt: new Date().toISOString(),
       });
@@ -64,7 +64,7 @@ class AssetCategory {
       const args = await AssetCategory.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await AssetCategoryModel.findOne({
+      const isValid = await db.AssetCategory.findOne({
         where: {
           id,
         },
@@ -73,7 +73,7 @@ class AssetCategory {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const updated_id = await AssetCategoryModel.update(args, {
+      const updated_id = await db.AssetCategory.update(args, {
         where: {
           id,
         },
@@ -95,7 +95,7 @@ class AssetCategory {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const isValid = await AssetCategoryModel.findOne({
+      const isValid = await db.AssetCategory.findOne({
         where: {
           id,
         },
@@ -104,7 +104,7 @@ class AssetCategory {
         return ResponseHandler.error(res, {}, 400, "invalid id");
       }
 
-      const updated_id = await AssetCategoryModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.AssetCategory.update({ isDeleted: 1 }, {
         where: {
           id,
         },
@@ -133,7 +133,7 @@ class AssetCategory {
         }),
       };
 
-      const data = await AssetCategoryModel.findAndCountAll({
+      const data = await db.AssetCategory.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -154,7 +154,7 @@ class AssetCategory {
   static async fetch(args = {}) {
     const search = args?.search || "";
 
-    const assetCategories = await AssetCategoryModel.findAll({
+    const assetCategories = await db.AssetCategory.findAll({
       attributes: [
         ["id", "value"],
         ["name", "label"],

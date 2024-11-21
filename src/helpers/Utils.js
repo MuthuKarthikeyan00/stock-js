@@ -1,7 +1,4 @@
-const { Request, Response, NextFunction } = require('express');
-
 class Utils {
-
     static isString(param) {
         return typeof param === 'string';
     }
@@ -77,11 +74,4 @@ class Utils {
     }
 }
 
-// Export the class and function
-module.exports = {
-    Utils,
-    removeNullPrototype: (req, res, next) => {
-        req.body = Object.assign({}, req.body);
-        next();
-    }
-};
+module.exports = Utils ;

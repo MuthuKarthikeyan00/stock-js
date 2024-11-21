@@ -1,29 +1,32 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { Employee: EmployeeModel } = require("../models/Employee");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeValidationSchema } = require("../validator/schema");
 const { Op } = require("sequelize");
 const { EmployeeRole: EmployeeRoleModel } = require("../models/EmployeeRole");
 const { EmployeeBranch: EmployeeBranchModel } = require("../models/EmployeeBranch");
-const EmployeeBranch = require("./EmployeeBranch");
-const EmployeeRole = require("./EmployeeRole");
+const db = require("../models");
 
 class Employee {
   static async render(req, res) {
-    const roles = await EmployeeRole.fetch();
-    const branches = await EmployeeBranch.fetch();
+    // const roles = await EmployeeRole.fetch();
+    // const branches = await EmployeeBranch.fetch();
 
-    let data;
-    let id = Utils.convertTONumber(req.params.id);
-    if (Utils.isGraterthenZero(id)) {
-      data = await EmployeeModel.findOne({
-        where: {
-          id
-        },
-      });
-    }
+    // let data;
+    // let id = Utils.convertTONumber(req.params.id);
+    // if (Utils.isGraterthenZero(id)) {
+    //   data = await db.Employee.findOne({
+    //     where: {
+    //       id
+    //     },
+    //   });
+    // }
+
+    let data=[];
+    let  roles=[];
+
+    let branches=[]
 
     return res.status(200).render('employee', {
       data,
@@ -50,7 +53,7 @@ class Employee {
       if (!status) {
         return ResponseHandler.error(res);
       }
-      const data = await EmployeeModel.create({
+      const data = await db.Employee.create({
         name: args.name,
         email: args.email,
         phone: args.phone,
@@ -87,7 +90,7 @@ class Employee {
       }
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await EmployeeModel.findOne({
+      const isValid = await db.Employee.findOne({
         where: {
           id,
         },
@@ -100,7 +103,7 @@ class Employee {
         );
       }
 
-      const updated_id = await EmployeeModel.update(args, {
+      const updated_id = await db.Employee.update(args, {
         where: {
           id,
         }
@@ -126,7 +129,7 @@ class Employee {
         );
       }
 
-      const isValid = await EmployeeModel.findOne({
+      const isValid = await db.Employee.findOne({
         where: {
           id,
         },
@@ -139,7 +142,7 @@ class Employee {
         );
       }
 
-      const updated_id = await EmployeeModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.Employee.update({ isDeleted: 1 }, {
         where: {
           id,
         }
@@ -170,7 +173,7 @@ class Employee {
         }),
       };
 
-      const { count, rows } = await EmployeeModel.findAndCountAll({
+      const { count, rows } = await db.Employee.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -216,7 +219,7 @@ class Employee {
   static async fetch(args = {}) {
     const search = args?.search || '';
 
-    const employees = await EmployeeModel.findAll({
+    const employees = await db.Employee.findAll({
       attributes: [
         ['id', 'value'],
         ['name', 'label']

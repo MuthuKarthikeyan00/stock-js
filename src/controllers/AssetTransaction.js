@@ -3,7 +3,6 @@ const Utils = require("../helpers/Utils");
 const { Asset: AssetModel } = require("../models/Asset");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
-const { AssetTransaction: AssetTransactionModel } = require("../models/AssetTransaction");
 const { AssetStatus: AssetStatusModel } = require("../models/AssetStatus");
 const { AssetTransactionType: AssetTransactionTypeModel } = require("../models/AssetTransactionType");
 const Asset = require("./Asset");
@@ -15,7 +14,7 @@ const { literal, Op, QueryTypes } = require("sequelize");
 const Employee = require("./Employee");
 const EmployeeBranch = require("./EmployeeBranch");
 const AssetCategory = require("./AssetCategory");
-
+const db = require("../models");
 
 class AssetTransaction {
 
@@ -89,7 +88,7 @@ class AssetTransaction {
       }
       args.createdAt = new Date().toISOString();
 
-      const data = await AssetTransactionModel.create(args);
+      const data = await db.AssetTransaction.create(args);
       if (Utils.isGraterthenZero(data.id)) {
         const updated_id = await AssetModel.update({
           assetStatusId: data.assetStatusId,
@@ -121,7 +120,7 @@ class AssetTransaction {
         return ResponseHandler.error(res,);
       }
 
-      const { rows, count } = await AssetTransactionModel.findAndCountAll({
+      const { rows, count } = await db.AssetTransaction.findAndCountAll({
         attributes: [
           'id',
           'amount', 'createdAt',

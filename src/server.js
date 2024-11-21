@@ -2,30 +2,26 @@ const express = require('express');
 const dotenv = require('dotenv');
 const multer = require('multer');
 const path = require('path');
-const { Sequelize } = require('sequelize');
+const db = require('./models');
+
 const removeNullPrototype = require('./helpers/removeNullPrototype');
 const Routers = require('./Routers');
+
 
 dotenv.config();
 const app = express();
 const upload = multer();
 
-const sequelize = new Sequelize('stocks', 'admin', 'admin', {
-  host: 'localhost',
-  dialect: 'postgres', 
-});
+db.sequelize.sync()
+  .then(() => {
+    console.log('Database synchronized');
+  })
+  .catch((err) => {
+    console.error('Error synchronizing database:', err);
+  });
 
 
-app.use(async (req, res, next) => {
-  try {
-    await sequelize.authenticate(); 
-    console.log('Database connected successfully.');
-    next();
-  } catch (error) {
-    console.error('Unable to connect to the database:', error.message);
-    res.status(500).send('Database connection error');
-  }
-});
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 

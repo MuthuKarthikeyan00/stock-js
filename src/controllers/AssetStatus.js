@@ -1,17 +1,17 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { AssetStatus: AssetStatusModel } = require("../models/AssetStatus");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeRoleValidationSchema } = require("../validator/schema");
 const { Op } = require("sequelize");
+const db = require("../models");
 
 class AssetStatus {
   static async render(req, res) {
     let data;
     let id = Utils.convertTONumber(req.params.id);
     if (Utils.isGraterthenZero(id)) {
-      data = await AssetStatusModel.findOne({
+      data = await db.AssetStatus.findOne({
         where: {
           id
         },
@@ -37,7 +37,7 @@ class AssetStatus {
       const body = req.body;
       const args = await AssetStatus.handleData(body);
 
-      const data = await AssetStatusModel.create({
+      const data = await db.AssetStatus.create({
         name: args.name,
         createdAt: new Date().toISOString(),
       });
@@ -69,7 +69,7 @@ class AssetStatus {
       const args = await AssetStatus.handleData(body);
       args.updatedAt = new Date().toISOString();
 
-      const isValid = await AssetStatusModel.findOne({
+      const isValid = await db.AssetStatus.findOne({
         where: {
           id,
         },
@@ -82,7 +82,7 @@ class AssetStatus {
         );
       }
 
-      const updated_id = await AssetStatusModel.update(args, {
+      const updated_id = await db.AssetStatus.update(args, {
         where: {
           id,
         }
@@ -108,7 +108,7 @@ class AssetStatus {
         );
       }
 
-      const isValid = await AssetStatusModel.findOne({
+      const isValid = await db.AssetStatus.findOne({
         where: {
           id,
         },
@@ -121,7 +121,7 @@ class AssetStatus {
         );
       }
 
-      const updated_id = await AssetStatusModel.update({ isDeleted: 1 }, {
+      const updated_id = await db.AssetStatus.update({ isDeleted: 1 }, {
         where: {
           id,
         }
@@ -152,7 +152,7 @@ class AssetStatus {
         }),
       };
 
-      const data = await AssetStatusModel.findAndCountAll({
+      const data = await db.AssetStatus.findAndCountAll({
         where: whereClause,
         offset: offset,
         limit: limit,
@@ -173,7 +173,7 @@ class AssetStatus {
   static async fetch(args = {}) {
     const search = args?.search || '';
     const ids = args?.ids || [1, 2, 3, 4];
-    const assetCategories = await AssetStatusModel.findAll({
+    const assetCategories = await db.AssetStatus.findAll({
       attributes: [
         ['id', 'value'],
         ['name', 'label']
