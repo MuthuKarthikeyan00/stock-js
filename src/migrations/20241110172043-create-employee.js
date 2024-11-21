@@ -1,4 +1,4 @@
-// src/migrations/20241110123159-create-employee.js
+
 
 'use strict';
 
@@ -59,7 +59,7 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        allowNull: false
+        allowNull: true
       }
     });
   },

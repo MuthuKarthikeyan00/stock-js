@@ -38,8 +38,7 @@ class AssetCategory {
       const args = await AssetCategory.handleData(body);
 
       const data = await db.AssetCategory.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect("/assetCategory");
@@ -62,7 +61,6 @@ class AssetCategory {
         return ResponseHandler.error(res);
       }
       const args = await AssetCategory.handleData(body);
-      args.updatedAt = new Date().toISOString();
 
       const isValid = await db.AssetCategory.findOne({
         where: {
@@ -147,9 +145,10 @@ class AssetCategory {
         data: data.rows,
       });
     } catch (error) {
-      // Handle error
+      return ResponseHandler.error(res, error);
     }
   }
+
 
   static async fetch(args = {}) {
     const search = args?.search || "";

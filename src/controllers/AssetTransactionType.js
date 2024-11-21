@@ -38,8 +38,7 @@ class AssetTransactionType {
       const args = await AssetTransactionType.handleData(body);
 
       const data = await db.AssetTransactionType.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/assetTransactionType');
@@ -67,7 +66,6 @@ class AssetTransactionType {
         return ResponseHandler.error(res);
       }
       const args = await AssetTransactionType.handleData(body);
-      args.updatedAt = new Date().toISOString();
 
       const isValid = await db.AssetTransactionType.findOne({
         where: {

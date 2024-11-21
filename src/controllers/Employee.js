@@ -53,8 +53,7 @@ class Employee {
         email: args.email,
         phone: args.phone,
         roleId: args.roleId,
-        branchId: args.branchId,
-        createdAt: new Date().toISOString(),
+        branchId: args.branchId
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/employee');
@@ -83,7 +82,7 @@ class Employee {
       if (!status) {
         return ResponseHandler.error(res);
       }
-      args.updatedAt = new Date().toISOString();
+
 
       const isValid = await db.Employee.findOne({
         where: {

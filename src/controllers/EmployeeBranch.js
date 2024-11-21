@@ -65,7 +65,7 @@ class EmployeeBranch {
         return ResponseHandler.error(res);
       }
       const args = await EmployeeBranch.handleData(body);
-      args.updatedAt = new Date().toISOString();
+
 
       const isValid = await db.EmployeeBranch.findOne({
         where: {

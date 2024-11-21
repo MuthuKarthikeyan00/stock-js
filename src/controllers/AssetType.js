@@ -38,8 +38,7 @@ class AssetType {
       const args = await AssetType.handleData(body);
 
       const data = await db.AssetType.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/assetType');
@@ -67,8 +66,6 @@ class AssetType {
         return ResponseHandler.error(res);
       }
       const args = await AssetType.handleData(body);
-      args.updatedAt = new Date().toISOString();
-
       const isValid = await db.AssetType.findOne({
         where: {
           id,
@@ -167,8 +164,7 @@ class AssetType {
       });
 
     } catch (error) {
-      // Handle error
-    }
+      return ResponseHandler.error(res, error);    }
   }
 
   static async fetch(args = {}) {

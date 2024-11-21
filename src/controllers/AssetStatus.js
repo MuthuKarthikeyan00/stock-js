@@ -38,8 +38,7 @@ class AssetStatus {
       const args = await AssetStatus.handleData(body);
 
       const data = await db.AssetStatus.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/assetStatus');
@@ -67,7 +66,6 @@ class AssetStatus {
         return ResponseHandler.error(res);
       }
       const args = await AssetStatus.handleData(body);
-      args.updatedAt = new Date().toISOString();
 
       const isValid = await db.AssetStatus.findOne({
         where: {
@@ -166,7 +164,7 @@ class AssetStatus {
         data: data.rows,
       });
     } catch (error) {
-      // Handle error appropriately
+      return ResponseHandler.error(res, error);
     }
   }
 

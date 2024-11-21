@@ -90,9 +90,7 @@ class Asset {
       if (!status) {
         return ResponseHandler.error(res);
       }
-      args.updatedAt = new Date().toISOString();
       args.statusId = 1;
-
       const isValid = await db.Asset.findOne({
         where: {
           id,

@@ -21,6 +21,14 @@ module.exports = (sequelize) => {
         unique: true,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       isDeleted: {
         type: DataTypes.SMALLINT,
         allowNull: true,

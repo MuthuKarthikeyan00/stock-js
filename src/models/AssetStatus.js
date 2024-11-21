@@ -24,7 +24,15 @@ module.exports = (sequelize) => {
       isDeleted: {
         type: DataTypes.SMALLINT,
         allowNull: true,
-      }
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,

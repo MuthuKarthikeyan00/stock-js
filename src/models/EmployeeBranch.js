@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 
 class EmployeeBranch extends Model {
   static associate(models) {
-    // Define associations
+
     EmployeeBranch.hasMany(models.Employee, { foreignKey: 'branchId', as: 'employees' });
   }
 }
@@ -20,13 +20,21 @@ module.exports = (sequelize) => {
         unique: true,
         allowNull: false,
       },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       isDeleted: {
         type: DataTypes.SMALLINT,
         allowNull: true,
       },
     },
     {
-      sequelize, // Passing sequelize instance here
+      sequelize,
       tableName: 'employee_branches',
       timestamps: true,
     }

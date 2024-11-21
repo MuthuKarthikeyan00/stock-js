@@ -83,7 +83,6 @@ class AssetTransaction {
         return ResponseHandler.error(res);
       }
       args.createdAt = new Date().toISOString();
-
       const data = await db.AssetTransaction.create(args);
       if (Utils.isGraterthenZero(data.id)) {
         const updated_id = await db.Asset.update({

@@ -38,8 +38,7 @@ class EmployeeRole {
       const args = await EmployeeRole.handleData(body);
 
       const data = await db.EmployeeRole.create({
-        name: args.name,
-        createdAt: new Date().toISOString(),
+        name: args.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect('/employeeRole'); 
@@ -67,7 +66,7 @@ class EmployeeRole {
         return ResponseHandler.error(res);
       }
       const args = await EmployeeRole.handleData(body);
-      args.updatedAt = new Date().toISOString();
+
 
       const isValid = await db.EmployeeRole.findOne({
         where: {
@@ -166,8 +165,7 @@ class EmployeeRole {
         data: data.rows,
       });
     } catch (error) {
-      // Handle error if necessary
-    }
+      return ResponseHandler.error(res, error);    }
   }
 
   static async fetch(args = {}) {

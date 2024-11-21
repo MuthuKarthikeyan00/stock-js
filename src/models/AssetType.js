@@ -2,7 +2,6 @@
 const { Model, DataTypes } = require('sequelize');
 class AssetType extends Model {
   static associate(models) {
-    // Define associations here
     AssetType.hasMany(models.Asset, { foreignKey: 'typeId', as: 'assets' });
   }
 }
@@ -19,6 +18,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       isDeleted: {
         type: DataTypes.SMALLINT,

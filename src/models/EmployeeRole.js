@@ -2,7 +2,6 @@ const { Model, DataTypes } = require('sequelize');
 
 class EmployeeRole extends Model {
   static associate(models) {
-    // Define the association between EmployeeRole and Employee
     EmployeeRole.hasMany(models.Employee, { foreignKey: 'roleId', as: 'employees' });
   }
 }
@@ -19,6 +18,14 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       isDeleted: {
         type: DataTypes.SMALLINT,
