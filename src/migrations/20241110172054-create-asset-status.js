@@ -1,4 +1,4 @@
-'use strict';
+
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -7,31 +7,32 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        allowNull: false
       },
       name: {
         type: Sequelize.STRING,
         unique: true, 
-        allowNull: false,
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
+        allowNull: false
       },
       isDeleted: {
         type: Sequelize.SMALLINT,
-        allowNull: true,
         defaultValue: 0,
+        allowNull: false
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: true
+      }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('asset_statuses');
-  },
+  }
 };

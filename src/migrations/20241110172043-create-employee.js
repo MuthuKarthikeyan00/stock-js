@@ -1,3 +1,5 @@
+// src/migrations/20241110123159-create-employee.js
+
 'use strict';
 
 module.exports = {
@@ -7,29 +9,32 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
+        allowNull: false
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true, 
+        unique: true,
+        allowNull: false
       },
       email: {
         type: Sequelize.STRING,
-        allowNull: false,
         unique: true,
+        allowNull: false
       },
       phone: {
         type: Sequelize.STRING,
-        allowNull: false,
         unique: true,
+        allowNull: false
       },
       roleId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'employee_roles',  // name of the table referenced
-          key: 'id',  // key in the referenced table
+          model: 'employee_roles',
+          key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       branchId: {
         type: Sequelize.INTEGER,
@@ -38,26 +43,28 @@ module.exports = {
           model: 'employee_branches',
           key: 'id',
         },
-      },
-      createdAt: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
-      },
-      updatedAt: {
-        type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       isDeleted: {
         type: Sequelize.SMALLINT,
-        allowNull: true,
         defaultValue: 0,
+        allowNull: false
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false
+      },
+      updatedAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        allowNull: false
+      }
     });
   },
 
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('employees');
-  },
+  }
 };

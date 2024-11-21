@@ -7,12 +7,6 @@ const { literal, Op } = require("sequelize");
 const AssetCategory = require("../controllers/AssetCategory");
 const AssetType = require("../controllers/AssetType");
 const AssetStatus = require("./AssetStatus");
-const { Employee } = require("../models/Employee");
-const { AssetTransaction } = require("../models/AssetTransaction");
-const { AssetStatus: AssetStatusModel } = require("../models/AssetStatus");
-const { AssetCategory: AssetCategoryModel } = require("../models/AssetCategory");
-const { AssetType: AssetTypeModel } = require("../models/AssetType");
-const { Employee: EmployeeModel } = require("../models/Employee");
 const db = require("../models");
 
 class Asset {
@@ -64,7 +58,7 @@ class Asset {
       const data = await db.Asset.create(args);
 
       if (Utils.isGraterthenZero(data.id)) {
-        const result = await AssetTransaction.create({
+        const result = await db.AssetTransaction.create({
           assetId: data.id,
           assetTransactionTypeId: 1,
           amount: data.amount,
@@ -167,7 +161,7 @@ class Asset {
       orderDir = orderDir || "desc";
 
       const whereClause = {
-        isDeleted: null,
+        isDeleted: 0,
         ...(searchValue && {
           [Op.or]: [{ name: { [Op.iLike]: `%${searchValue}%` } }],
         }),
@@ -181,22 +175,26 @@ class Asset {
 
         include: [
           {
-            model: AssetStatusModel,
+            model: db.AssetStatus,
+            as : 'assetStatus',
             attributes: [["name", "assetStatusName"]],
             required: false,
           },
           {
-            model: AssetCategoryModel,
+            model: db.AssetCategory,
+            as: "assetCategory",
             attributes: [["name", "assetCategoryName"]],
             required: false,
           },
           {
-            model: AssetTypeModel,
+            model: db.AssetType,
+            as: "assetType",
             attributes: [["name", "assetTypeName"]],
             required: false,
           },
           {
-            model: EmployeeModel,
+            model: db.Employee,
+            as: "employee",
             attributes: [["name", "employeeName"]],
             required: false,
           },
@@ -246,9 +244,7 @@ class Asset {
         [literal(`Employee.name`), "employeeName"],
       ],
       where: {
-        isDeleted: {
-          [Op.is]: null,
-        },
+        isDeleted: 0,
         [Op.or]: [
           { serialNumber: { [Op.like]: `%${search}%` } },
           { name: { [Op.like]: `%${search}%` } },
@@ -260,7 +256,8 @@ class Asset {
       },
       include: [
         {
-          model: Employee,
+          model: db.Employee,
+          as : 'employee',
           attributes: [["name", "employeeName"]],
           required: false,
         },

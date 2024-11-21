@@ -1,4 +1,4 @@
-const JSONbig = require('json-bigint');
+
 
 class ResponseHandler {
 
@@ -7,9 +7,12 @@ class ResponseHandler {
         message = message || '';
         data = data || [];
 
-        res.status(code);
-        res.setHeader('Content-Type', 'application/json');
-        return res.end(JSONbig.stringify({ success: true, message, data }));
+
+        return res.status(code).json({
+            status: code,
+            message,
+            error
+        });
     }
 
     static error(res, error = {}, code = 200, message = '') {

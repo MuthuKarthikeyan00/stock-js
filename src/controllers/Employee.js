@@ -4,29 +4,24 @@ const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
 const { employeeValidationSchema } = require("../validator/schema");
 const { Op } = require("sequelize");
-const { EmployeeRole: EmployeeRoleModel } = require("../models/EmployeeRole");
-const { EmployeeBranch: EmployeeBranchModel } = require("../models/EmployeeBranch");
 const db = require("../models");
+const EmployeeRole = require("./EmployeeRole");
+const EmployeeBranch = require("./EmployeeBranch");
 
 class Employee {
   static async render(req, res) {
-    // const roles = await EmployeeRole.fetch();
-    // const branches = await EmployeeBranch.fetch();
+    const roles = await EmployeeRole.fetch();
+    const branches = await EmployeeBranch.fetch();
 
-    // let data;
-    // let id = Utils.convertTONumber(req.params.id);
-    // if (Utils.isGraterthenZero(id)) {
-    //   data = await db.Employee.findOne({
-    //     where: {
-    //       id
-    //     },
-    //   });
-    // }
-
-    let data=[];
-    let  roles=[];
-
-    let branches=[]
+    let data;
+    let id = Utils.convertTONumber(req.params.id);
+    if (Utils.isGraterthenZero(id)) {
+      data = await db.Employee.findOne({
+        where: {
+          id
+        },
+      });
+    }
 
     return res.status(200).render('employee', {
       data,
@@ -165,7 +160,7 @@ class Employee {
       orderDir = orderDir || "desc";
 
       const whereClause = {
-        isDeleted: null,
+        isDeleted: 0,
         ...(searchValue && {
           [Op.or]: [
             { name: { [Op.iLike]: `%${searchValue}%` } },
@@ -180,12 +175,14 @@ class Employee {
         order: [[String(orderColumn), String(orderDir)]],
         include: [
           {
-            model: EmployeeBranchModel,
+            model: db.EmployeeBranch,
+            as: 'employeeBranch',
             attributes: [['name', 'employeeBranchName']],
             required: false
           },
           {
-            model: EmployeeRoleModel,
+            model: db.EmployeeRole,
+            as: 'employeeRole',
             attributes: [['name', 'employeeRoleName']],
             required: false
           }
@@ -225,9 +222,7 @@ class Employee {
         ['name', 'label']
       ],
       where: {
-        isDeleted: {
-          [Op.is]: null
-        },
+        isDeleted: 0,
         [Op.or]: [
           { name: { [Op.like]: `%${search}%` } },
         ]

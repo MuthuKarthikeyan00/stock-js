@@ -1,26 +1,24 @@
 const Sanitizer = require('../helpers/Sanitizer');
 const Utils = require('../helpers/Utils');
-
 const ResponseHandler = require('../helpers/ResponseHandler');
 const Validator = require('../validator/Validator');
 const { employeeRoleValidationSchema } = require('../validator/schema');
-const { literal, Op } = require('sequelize');
+const { Op } = require('sequelize');
 
 const db = require("../models");
 
 class EmployeeBranch {
   static async render(req, res) {
-    // let data;
-    // let id = Utils.convertTONumber(req.params.id);
-    // if (Utils.isGraterthenZero(id)) {
-    //   data = await db.EmployeeBranch.findOne({
-    //     where: {
-    //       id,
-    //     },
-    //   });
-    // }
+    let data =await EmployeeBranch.fetch();
+    let id = Utils.convertTONumber(req.params.id);
+    if (Utils.isGraterthenZero(id)) {
+      data = await db.EmployeeBranch.findOne({
+        where: {
+          id,
+        },
+      });
+    }
 
-    let data = []
 
     return res.status(200).render('employeeBranch', {
       data,
@@ -132,7 +130,7 @@ class EmployeeBranch {
       orderDir = orderDir || 'desc';
 
       const whereClause = {
-        isDeleted: null,
+        isDeleted: 0,
         ...(searchValue && {
           [Op.or]: [{ name: { [Op.iLike]: `%${searchValue}%` } }],
         }),
@@ -160,9 +158,7 @@ class EmployeeBranch {
     const assetCategories = await db.EmployeeBranch.findAll({
       attributes: [['id', 'value'], ['name', 'label']],
       where: {
-        isDeleted: {
-          [Op.is]: null,
-        },
+        isDeleted: 0,
         [Op.or]: [{ name: { [Op.like]: `%${search}%` } }],
       },
       raw: true,

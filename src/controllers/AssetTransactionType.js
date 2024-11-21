@@ -144,7 +144,7 @@ class AssetTransactionType {
       orderDir = orderDir || "desc";
 
       const whereClause = {
-        isDeleted: null,
+        isDeleted: 0,
         ...(searchValue && {
           [Op.or]: [
             { name: { [Op.iLike]: `%${searchValue}%` } },
@@ -181,9 +181,7 @@ class AssetTransactionType {
         ['name', 'label']
       ],
       where: {
-        isDeleted: {
-          [Op.is]: null
-        },
+        isDeleted:0,
         [Op.or]: [
           { name: { [Op.like]: `%${search}%` } },
         ],

@@ -1,16 +1,12 @@
 const Sanitizer = require("../helpers/Sanitizer");
 const Utils = require("../helpers/Utils");
-const { Asset: AssetModel } = require("../models/Asset");
 const ResponseHandler = require("../helpers/ResponseHandler");
 const Validator = require("../validator/Validator");
-const { AssetStatus: AssetStatusModel } = require("../models/AssetStatus");
-const { AssetTransactionType: AssetTransactionTypeModel } = require("../models/AssetTransactionType");
 const Asset = require("./Asset");
 const { AssetTransactionValidationSchema } = require("../validator/schema");
-const { Employee: EmployeeModel } = require("../models/Employee");
 const AssetStatus = require("./AssetStatus");
 const AssetTransactionType = require("./AssetTransactionType");
-const { literal, Op, QueryTypes } = require("sequelize");
+const {  QueryTypes } = require("sequelize");
 const Employee = require("./Employee");
 const EmployeeBranch = require("./EmployeeBranch");
 const AssetCategory = require("./AssetCategory");
@@ -90,7 +86,7 @@ class AssetTransaction {
 
       const data = await db.AssetTransaction.create(args);
       if (Utils.isGraterthenZero(data.id)) {
-        const updated_id = await AssetModel.update({
+        const updated_id = await db.Asset.update({
           assetStatusId: data.assetStatusId,
           employeeId: ([2].includes(args.assetStatusId)) ? data.employeeId : null
         }, {
@@ -130,22 +126,26 @@ class AssetTransaction {
         },
         include: [
           {
-            model: AssetModel,
+            model: db.Asset,
+            as: 'asset',
             attributes: [['name', 'assetId']],
             required: false
           },
           {
-            model: EmployeeModel,
+            model: db.Employee,
+            as: "employee",
             attributes: [['name', 'employeeId']],
             required: false
           },
           {
-            model: AssetStatusModel,
+            model: db.AssetStatus,
+            as: "assetStatus",
             attributes: [['name', 'assetStatusId']],
             required: false
           },
           {
-            model: AssetTransactionTypeModel,
+            model: db.AssetTransactionType,
+            as: "assetTransactionType",
             attributes: [['name', 'assetTransactionTypeId']],
             required: false
           }
@@ -193,7 +193,7 @@ class AssetTransaction {
       const employeeId = args?.employeeId || null;
       const branchId = args?.branchId || null;
 
-      let whereClause = `WHERE assets."assetStatusId" != 4 `;
+      let whereClause = `WHERE assets."assetStatusId" != 4  AND assets."isDeleted" = 0  `;
       if (assetId > 0) {
         whereClause += ` AND assets.id = ${assetId}`;
       }
@@ -241,11 +241,11 @@ class AssetTransaction {
         ${whereClause};
       `;
 
-      const rows = await sequelize.query(query, {
+      const rows = await db.sequelize.query(query, {
         type: QueryTypes.SELECT,
       });
 
-      const countResult = await sequelize.query(countQuery, {
+      const countResult = await db.sequelize.query(countQuery, {
         type: QueryTypes.SELECT,
       });
 
