@@ -38,7 +38,7 @@ class AssetCategory {
       const args = await AssetCategory.handleData(body);
 
       const data = await db.AssetCategory.create({
-        name: args.name
+        name: body.name
       });
 
       if (Utils.isGraterthenZero(data.id)) return res.status(201).redirect("/assetCategory");

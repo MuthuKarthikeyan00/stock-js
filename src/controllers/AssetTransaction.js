@@ -185,35 +185,45 @@ class AssetTransaction {
       const orderBy = order?.columns[orderColumn]?.data;
       orderColumn = !String(orderBy) || orderBy == 'name' ? 'assets.createdAt' : String(orderBy);
       orderDir = String(orderDir) || "asc";
-
+  
       const assetId = args?.assetId || null;
       const assetStatusId = args?.assetStatusId || null;
       const assetcategoryId = args?.assetcategoryId || null;
       const employeeId = args?.employeeId || null;
       const branchId = args?.branchId || null;
-
-      let whereClause = `WHERE assets."assetStatusId" != 4  AND assets."isDeleted" = 0  `;
+  
+      let whereClause = 'WHERE assets."assetStatusId" != :excludedStatusId AND assets."isDeleted" = :isDeleted';
+      const replacements = {
+        excludedStatusId: 4,
+        isDeleted: 0,
+      };
+  
       if (assetId > 0) {
-        whereClause += ` AND assets.id = ${assetId}`;
+        whereClause += ' AND assets.id = :assetId';
+        replacements.assetId = assetId;
       }
       if (assetStatusId > 0) {
-        whereClause += ` AND assets."assetStatusId" = ${assetStatusId}`;
+        whereClause += ' AND assets."assetStatusId" = :assetStatusId';
+        replacements.assetStatusId = assetStatusId;
       }
       if (assetcategoryId > 0) {
-        whereClause += ` AND assets."categoryId" = ${assetcategoryId}`;
+        whereClause += ' AND assets."categoryId" = :assetcategoryId';
+        replacements.assetcategoryId = assetcategoryId;
       }
       if (employeeId > 0) {
-        whereClause += ` AND assets."employeeId" = ${employeeId}`;
+        whereClause += ' AND assets."employeeId" = :employeeId';
+        replacements.employeeId = employeeId;
       }
       if (branchId > 0) {
-        whereClause += ` AND employees."branchId" = ${branchId}`;
+        whereClause += ' AND employees."branchId" = :branchId';
+        replacements.branchId = branchId;
       }
+  
       let orderByCon = '';
-
-      if (orderByCon) {
-        orderByCon = `ORDER BY `;
+      if (orderBy) {
+        orderByCon = `ORDER BY ${orderColumn} ${orderDir}`;
       }
-
+  
       const query = `
         SELECT 
           assets.name AS "assetName",
@@ -228,8 +238,10 @@ class AssetTransaction {
         LEFT JOIN employees ON employees.id = assets."employeeId"
         LEFT JOIN employee_branches ON employee_branches.id = employees."branchId"
         ${whereClause}
+        ${orderByCon}
+        LIMIT :limit OFFSET :offset
       `;
-
+  
       const countQuery = `
         SELECT COUNT(*) AS "count"
         FROM assets
@@ -239,29 +251,35 @@ class AssetTransaction {
         LEFT JOIN employee_branches ON employee_branches.id = employees."branchId"
         ${whereClause};
       `;
-
+  
+      replacements.limit = limit;
+      replacements.offset = offset;
+  
       const rows = await db.sequelize.query(query, {
+        replacements,
         type: QueryTypes.SELECT,
       });
-
+  
       const countResult = await db.sequelize.query(countQuery, {
+        replacements,
         type: QueryTypes.SELECT,
       });
-
+  
       const countObj = countResult[0];
       const count = countObj.count;
-
+  
       res.json({
         draw: draw,
         recordsTotal: count,
         recordsFiltered: count,
         data: rows,
       });
-
+  
     } catch (error) {
       return ResponseHandler.error(res, error);
     }
   }
+  
 }
 
 module.exports = AssetTransaction;
