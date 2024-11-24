@@ -26,7 +26,7 @@ const AssetTransactionValidationSchema = z.object({
   assetTransactionTypeId: z.number().positive().min(1).nullable(),
   employeeId: z.number().positive().min(1).nullable(),
   assetStatusId: z.number().positive().min(1),
-  amount: z.number().positive().min(1).nullable(),
+  amount: z.number().optional().nullable(),
 });
 
 module.exports = {

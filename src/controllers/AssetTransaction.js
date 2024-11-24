@@ -83,6 +83,7 @@ class AssetTransaction {
         return ResponseHandler.error(res);
       }
       args.createdAt = new Date().toISOString();
+      
       const data = await db.AssetTransaction.create(args);
       if (Utils.isGraterthenZero(data.id)) {
         const updated_id = await db.Asset.update({
@@ -93,6 +94,14 @@ class AssetTransaction {
             id: data.assetId,
           }
         });
+
+        if(args.assetTransactionTypeId==4) {
+          const emp = await db.Employee.update({ isDeleted: 1 }, {
+            where: {
+              id:data.employeeId,
+            }
+          });
+        }
         return res.status(201).redirect('/stockView');
       }
       return ResponseHandler.error(res);
