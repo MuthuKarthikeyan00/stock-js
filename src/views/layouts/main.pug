@@ -8,6 +8,7 @@ html(lang="en")
         link(href="/style.css", rel="stylesheet")
         link(rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css")
         script(src="/bootstrap/js/bootstrap.bundle.min.js")
+        script(src='https://code.jquery.com/jquery-3.6.0.min.js')     
     body
         header(class='header_conatiner border') 
             section(class='header_left d-flex justify-content-center align-items-center border')  
@@ -32,10 +33,10 @@ html(lang="en")
                     a.nav-link(href="stockView") Stock View
 
             main(class='main_right border')  
-                block content
+                block content   
         script.
             $(document).ready(function() {
-                const currentPath = window.location.pathname.substring(1); // Remove leading '/'
+                const currentPath = window.location.pathname.substring(1);
                 $('a.nav-link[href="' + currentPath + '"]').addClass('active');
             });
             (() => {
