@@ -11,7 +11,7 @@ class ResponseHandler {
         return res.status(code).json({
             status: code,
             message,
-            error
+            data            
         });
     }
 

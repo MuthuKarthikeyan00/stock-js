@@ -141,8 +141,8 @@ class Asset {
         }
       );
 
-      if (Utils.isGraterthenZero(updated_id[0]))
-        return ResponseHandler.success(res, 200, {});
+      if (Utils.isGraterthenZero(updated_id[0])) return res.status(200).redirect("/asset");
+
       return ResponseHandler.error(res);
     } catch (error) {
       return ResponseHandler.error(res, error);

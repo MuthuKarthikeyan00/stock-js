@@ -8,6 +8,7 @@ class Employee extends Model {
   }
 }
 
+
 module.exports = (sequelize) => {
   Employee.init(
     {
