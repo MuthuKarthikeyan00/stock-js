@@ -31,7 +31,7 @@ block content
                                    option(value=role.value) #{role.label}                                   
                         .invalid-feedback Please select a valid role.
                     .col-md-6
-                        label(for="branchId").form-label Role
+                        label(for="branchId").form-label Branch
                         select#branchId.form-select(name="branchId", required)
                             each branch in branches
                                 if branch.id == data.branchId  
@@ -80,7 +80,7 @@ block content
                                 option(value=role.value) #{role.label}
                         .invalid-feedback Please select a valid role.
                     .col-md-6
-                        label(for="branchId").form-label Role
+                        label(for="branchId").form-label Branch
                         select#branchId.form-select(name="branchId", required)
                             each branch in branches
                                 option(value=branch.value) #{branch.label}
